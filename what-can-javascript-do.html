@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What can JavaScript do?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            color: #fff;
+        }
+
+        .heading {
+            text-align: center;
+            margin-top: 20px;
+            transition: color 0.5s ease;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            margin-top: auto;
+            margin-bottom: 20px;
+            max-width: 600px;
+            width: 80%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+}
+
+        .button-container .button {
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .change-image-button {
+            flex: none; /* To prevent the button from stretching */
+        }
+
+        @media (max-width: 600px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .button-container .button {
+                flex: none;
+                margin: 5px 0;
+            }
+        }
+
+        .button {
+            background-color: #d6ac14;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background-color: #9e4e1d;
+        }
+
+        .hidden-message {
+            display: none;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hidden-message.active {
+            display: block;
+        }
+
+        .change-image-button {
+            background-color: #ffffff;
+            color: rgb(22, 22, 21);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+            margin: 5px;
+        }
+
+        .change-image-button:hover {
+            color: #fff;
+            background-color: #208b82;
+        }
+
+        .animate-heading {
+            color: #ffcc00;
+        }
+
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            display: none;
+        }
+
+        .bordered-image {
+            width: 100%;
+            height: auto;
+            border: 10px solid #fff;
+            box-sizing: border-box;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container.transition {
+            transition: background-color 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="heading" id="heading">
+        <h1>What can JavaScript do?</h1>
+        <hr>
+    </div>
+
+    <div class="container" id="container">
+        <div class="hidden-message" id="hiddenMessage">
+            <p>JavaScript Can Hide and Show Content!</p>
+        </div>
+        <div class="button-container">
+            <button class="button" id="showMessageBtn">Show Message</button>
+            <button class="change-image-button" id="changeImageBtn">Change Image</button>
+            <button class="button" id="animate">Change Color</button>
+        </div>
+        <div class="animation-container">
+            <div class="ball" style="width: 30px; height: 30px;"></div>
+            <div class="ball" style="width: 20px; height: 20px;"></div>
+            <div class="ball" style="width: 40px; height: 40px;"></div>
+        </div>
+        <img class="bordered-image" id="animatedImage" src="https://via.placeholder.com/600" alt="Awesome Image">
+    </div>
+    
+
+    <script>
+        const container = document.getElementById('container');
+        const showMessageBtn = document.getElementById('showMessageBtn');
+        const hiddenMessage = document.getElementById('hiddenMessage');
+        const heading = document.getElementById('heading');
+    
+
+const changeImageBtn = document.getElementById('changeImageBtn');
+const animateBtn = document.getElementById('animate');
+const animatedImage = document.getElementById('animatedImage');
+
+const imageUrls = [
+    'https://via.placeholder.com/300',
+    'https://via.placeholder.com/400',
+    'https://via.placeholder.com/500',
+];
+
+let currentImageIndex = 0;
+
+showMessageBtn.addEventListener('click', function () {
+    hiddenMessage.classList.toggle('active');
+    if (hiddenMessage.classList.contains('active')) {
+        showMessageBtn.textContent = 'Hide Message';
+        heading.classList.add('animate-heading');
+    } else {
+        showMessageBtn.textContent = 'Show Message';
+        heading.classList.remove('animate-heading');
+    }
+});
+
+changeImageBtn.addEventListener('click', function () {
+    animatedImage.src = imageUrls[currentImageIndex];
+    currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+});
+
+animateBtn.addEventListener('click', function () {
+    const animationContainer = document.querySelector('.animation-container');
+    const randomColor = getRandomColor();
+    
+    // Add transition class to container for smooth color change
+    container.classList.add('transition');
+    
+    container.style.backgroundColor = randomColor;
+    
+    // Remove transition class after transition ends
+    setTimeout(() => {
+        container.classList.remove('transition');
+    }, 500);
+    
+    animationContainer.classList.toggle('animation-active');
+});
+
+function getRandomColor() {
+    const backgroundColors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#34495e'];
+    const randomIndex = Math.floor(Math.random() * backgroundColors.length);
+    return backgroundColors[randomIndex];
+}
+</script>
+</body>
+</html>

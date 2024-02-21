@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,17 +35,19 @@
             width: 80%;
             position: relative;
             overflow: hidden;
+            text-align: center; /* Horizontally center content */
         }
 
         .button-container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
-}
+        }
 
         .button-container .button {
             flex: 1;
             margin: 0 5px;
+            transition: background-color 0.3s ease-in-out;
         }
 
         .change-image-button {
@@ -66,19 +67,22 @@
         }
 
         .button {
+            color: rgb(22, 22, 21);
             background-color: #d6ac14;
-            color: white;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease-in-out;
             margin: 5px;
         }
 
         .button:hover {
             background-color: #9e4e1d;
+        }
+
+        .button:active {
+            background-color: #6e3310;
         }
 
         .hidden-message {
@@ -88,6 +92,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            margin-bottom: 20px; 
             text-align: center;
         }
 
@@ -96,8 +101,8 @@
         }
 
         .change-image-button {
-            background-color: #ffffff;
-            color: rgb(22, 22, 21);
+            background-color: #2ecc71;
+            color: #fff;
             border: none;
             border-radius: 5px;
             padding: 10px 20px;
@@ -108,7 +113,6 @@
         }
 
         .change-image-button:hover {
-            color: #fff;
             background-color: #208b82;
         }
 
@@ -129,12 +133,14 @@
 
         .bordered-image {
             width: 100%;
-            height: auto;
+            height: 100%;
             border: 10px solid #fff;
             box-sizing: border-box;
             border-radius: 10px;
             position: relative;
             z-index: 1;
+            object-fit: contain;
+            display: inline-block; /* Center horizontally */
         }
 
         .container.transition {
@@ -154,7 +160,7 @@
         </div>
         <div class="button-container">
             <button class="button" id="showMessageBtn">Show Message</button>
-            <button class="change-image-button" id="changeImageBtn">Change Image</button>
+            <button class="change-image-button" id="changeImageBtn">Turn On</button>
             <button class="button" id="animate">Change Color</button>
         </div>
         <div class="animation-container">
@@ -162,67 +168,67 @@
             <div class="ball" style="width: 20px; height: 20px;"></div>
             <div class="ball" style="width: 40px; height: 40px;"></div>
         </div>
-        <img class="bordered-image" id="animatedImage" src="https://via.placeholder.com/600" alt="Awesome Image">
+        <img class="bordered-image" id="animatedImage" src="images/light-off.png" alt="Awesome Image">
     </div>
-    
 
     <script>
         const container = document.getElementById('container');
         const showMessageBtn = document.getElementById('showMessageBtn');
         const hiddenMessage = document.getElementById('hiddenMessage');
         const heading = document.getElementById('heading');
-    
+        const changeImageBtn = document.getElementById('changeImageBtn');
+        const animateBtn = document.getElementById('animate');
+        const animatedImage = document.getElementById('animatedImage');
 
-const changeImageBtn = document.getElementById('changeImageBtn');
-const animateBtn = document.getElementById('animate');
-const animatedImage = document.getElementById('animatedImage');
+        const imageUrls = [
+            'images/light-off.png',
+            'images/light-on.png',
+        ];
 
-const imageUrls = [
-    'https://via.placeholder.com/300',
-    'https://via.placeholder.com/400',
-    'https://via.placeholder.com/500',
-];
+        let currentImageIndex = 0;
+        let isLightOn = false;
 
-let currentImageIndex = 0;
+        showMessageBtn.addEventListener('click', function () {
+            hiddenMessage.classList.toggle('active');
+            if (hiddenMessage.classList.contains('active')) {
+                showMessageBtn.textContent = 'Hide Message';
+                heading.classList.add('animate-heading');
+            } else {
+                showMessageBtn.textContent = 'Show Message';
+                heading.classList.remove('animate-heading');
+            }
+        });
 
-showMessageBtn.addEventListener('click', function () {
-    hiddenMessage.classList.toggle('active');
-    if (hiddenMessage.classList.contains('active')) {
-        showMessageBtn.textContent = 'Hide Message';
-        heading.classList.add('animate-heading');
-    } else {
-        showMessageBtn.textContent = 'Show Message';
-        heading.classList.remove('animate-heading');
-    }
-});
+        changeImageBtn.addEventListener('click', function () {
+            isLightOn = !isLightOn;
+            currentImageIndex = isLightOn ? 1 : 0;
+            animatedImage.src = imageUrls[currentImageIndex];
+            changeImageBtn.textContent = isLightOn ? 'Turn Off' : 'Turn On';
+            changeImageBtn.style.backgroundColor = isLightOn ? '#d63031' : '#2ecc71'; // Red for off, green for on
+        });
 
-changeImageBtn.addEventListener('click', function () {
-    animatedImage.src = imageUrls[currentImageIndex];
-    currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-});
+        animateBtn.addEventListener('click', function () {
+            const animationContainer = document.querySelector('.animation-container');
+            const randomColor = getRandomColor();
 
-animateBtn.addEventListener('click', function () {
-    const animationContainer = document.querySelector('.animation-container');
-    const randomColor = getRandomColor();
-    
-    // Add transition class to container for smooth color change
-    container.classList.add('transition');
-    
-    container.style.backgroundColor = randomColor;
-    
-    // Remove transition class after transition ends
-    setTimeout(() => {
-        container.classList.remove('transition');
-    }, 500);
-    
-    animationContainer.classList.toggle('animation-active');
-});
+            // Add transition class to container for smooth color change
+            container.classList.add('transition');
 
-function getRandomColor() {
-    const backgroundColors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#34495e'];
-    const randomIndex = Math.floor(Math.random() * backgroundColors.length);
-    return backgroundColors[randomIndex];
-}
-</script>
+            container.style.backgroundColor = randomColor;
+
+            // Remove transition class after transition ends
+            setTimeout(() => {
+                container.classList.remove('transition');
+            }, 500);
+
+            animationContainer.classList.toggle('animation-active');
+        });
+
+        function getRandomColor() {
+            const backgroundColors = ['#34495e', '#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#c0392b'];
+            const randomIndex = Math.floor(Math.random() * backgroundColors.length);
+            return backgroundColors[randomIndex];
+        }
+    </script>
 </body>
 </html>

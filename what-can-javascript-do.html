@@ -23,6 +23,330 @@
             transition: color 0.5s ease;
         }
 
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            margin-top: auto;
+            margin-bottom: 20px;
+            max-width: 600px;
+            width: 80%;
+            position: relative;
+            overflow: hidden;
+            text-align: center; /* Horizontally center content */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .button-container .button {
+            flex: 1;
+            margin: 0 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .change-image-button {
+            flex: none; /* To prevent the button from stretching */
+        }
+
+        @media (max-width: 600px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .button-container .button {
+                flex: none;
+                margin: 5px 0;
+            }
+        }
+
+        .button {
+            color: rgb(22, 22, 21);
+            background-color: #d6ac14;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background-color: #9e4e1d;
+        }
+
+        .button:active {
+            background-color: #6e3310;
+        }
+
+        .hidden-message {
+            display: none;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            margin-bottom: 20px; 
+            text-align: center;
+        }
+
+        .hidden-message.active {
+            display: block;
+        }
+
+        .change-image-button {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+            margin: 5px;
+        }
+
+        .change-image-button:hover {
+            background-color: #208b82;
+        }
+
+        .animate-heading {
+            color: #ffcc00;
+        }
+
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            display: none;
+        }
+
+        .bordered-image {
+            width: 100%;
+            height: 100%;
+            border: 10px solid #fff;
+            box-sizing: border-box;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            object-fit: contain;
+            display: inline-block; /* Center horizontally */
+        }
+
+        .container.transition {
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            color: #141414;
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 10px;
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="heading" id="heading">
+        <h1>What can JavaScript do?</h1>
+        <hr>
+    </div>
+
+    <div class="container" id="container">
+        <div class="hidden-message" id="hiddenMessage">
+            <p>JavaScript Can Hide and Show Content!</p>
+        </div>
+        <div class="button-container">
+            <button class="button" id="showMessageBtn">Show Message</button>
+            <button class="change-image-button" id="changeImageBtn">Turn On</button>
+            <button class="button" id="animate">Change Color</button>
+        </div>
+        <div class="animation-container">
+            <div class="ball" style="width: 30px; height: 30px;"></div>
+            <div class="ball" style="width: 20px; height: 20px;"></div>
+            <div class="ball" style="width: 40px; height: 40px;"></div>
+        </div>
+        <img class="bordered-image" id="animatedImage" src="images/light-off.png" alt="Awesome Image">
+    </div>
+
+    <!-- Modal -->
+    <div id="popupModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Image Credits</h2>
+            <p>Light Bulb Filament Lamp Orange by <a href="https://pixabay.com/vectors/light-bulb-filament-lamp-orange-311119/" target="_blank" rel="nofollow">Clker-Free-Vector-Images</a></p>
+            <p>Bulb Light Electricity Lamp Power by <a href="https://pixabay.com/vectors/bulb-light-electricity-lamp-power-33238/" target="_blank" rel="nofollow">Clker-Free-Vector-Images</a></p>
+            <p>We respect the creators and thank them for sharing their work.</p>
+        </div>
+    </div>
+
+    <button id="openModalButton">Image Credits</button>
+
+    <script>
+        // JavaScript for the modal
+        const modal = document.getElementById('popupModal');
+        const openModalButton = document.getElementById('openModalButton');
+        const closeButton = document.querySelector('.close');
+
+        // Function to show the modal
+        function showModal() {
+            modal.style.display = 'block';
+        }
+
+        // Function to hide the modal
+        function hideModal() {
+            modal.style.display = 'none';
+        }
+
+        // Event listener for opening the modal
+        openModalButton.addEventListener('click', function () {
+            showModal();
+        });
+
+        // Event listener for closing the modal using the close button
+        closeButton.addEventListener('click', function () {
+            hideModal();
+        });
+
+        // Event listener for closing the modal by clicking outside the modal
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                hideModal();
+            }
+        });
+
+        // JavaScript for the rest of your functionality
+        const container = document.getElementById('container');
+        const showMessageBtn = document.getElementById('showMessageBtn');
+        const hiddenMessage = document.getElementById('hiddenMessage');
+        const heading = document.getElementById('heading');
+        const changeImageBtn = document.getElementById('changeImageBtn');
+        const animateBtn = document.getElementById('animate');
+        const animatedImage = document.getElementById('animatedImage');
+
+        const imageUrls = [
+            'images/light-off.png',
+            'images/light-on.png',
+        ];
+
+        let currentImageIndex = 0;
+        let isLightOn = false;
+
+        showMessageBtn.addEventListener('click', function () {
+            hiddenMessage.classList.toggle('active');
+            if (hiddenMessage.classList.contains('active')) {
+                showMessageBtn.textContent = 'Hide Message';
+                heading.classList.add('animate-heading');
+            } else {
+                showMessageBtn.textContent = 'Show Message';
+                heading.classList.remove('animate-heading');
+            }
+        });
+
+        changeImageBtn.addEventListener('click', function () {
+            isLightOn = !isLightOn;
+            currentImageIndex = isLightOn ? 1 : 0;
+            animatedImage.src = imageUrls[currentImageIndex];
+            changeImageBtn.textContent = isLightOn ? 'Turn Off' : 'Turn On';
+            changeImageBtn.style.backgroundColor = isLightOn ? '#d63031' : '#2ecc71'; // Red for off, green for on
+        });
+
+        animateBtn.addEventListener('click', function () {
+            const animationContainer = document.querySelector('.animation-container');
+            const randomColor = getRandomColor();
+
+            // Add transition class to container for smooth color change
+            container.classList.add('transition');
+
+            container.style.backgroundColor = randomColor;
+
+            // Remove transition class after transition ends
+            setTimeout(() => {
+                container.classList.remove('transition');
+            }, 500);
+
+            animationContainer.classList.toggle('animation-active');
+        });
+
+        function getRandomColor() {
+            const backgroundColors = ['#34495e', '#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#c0392b'];
+            const randomIndex = Math.floor(Math.random() * backgroundColors.length);
+            return backgroundColors[randomIndex];
+        }
+    </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What can JavaScript do?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            color: #fff;
+        }
+
+        .heading {
+            text-align: center;
+            margin-top: 20px;
+            transition: color 0.5s ease;
+        }
+
         .credits-container {
             text-align: center;
             margin-bottom: 20px;
@@ -256,4 +580,4 @@
         }
     </script>
 </body>
-</html>
+</html> -->
